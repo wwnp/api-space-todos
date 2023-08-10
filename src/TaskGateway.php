@@ -17,7 +17,7 @@ class TaskGateway
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":user_id", $userId, PDO::PARAM_INT);
         $stmt->execute();
-	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $data;
     }
     public function getAllForUser(int $userId): array

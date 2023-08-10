@@ -19,21 +19,21 @@ class TaskController
                     break;
                 case 'POST':
                     $todos = $this->gateway->getAllForUser($this->userId);
-                    $errors = $this->getValidationErrors($_POST, true ,$todos);
+                    $errors = $this->getValidationErrors($_POST, true, $todos);
                     if (!empty($errors)) {
                         http_response_code(422);
                         echo json_encode(["errors" => $errors]);
                         return;
                     }
 
-		   $todos = $this->gateway->getTodosByUser($this->userId); 
-		   if (count($todos) > 5) {
-                http_response_code(423);
-                echo json_encode(["message" => "Too many todos"]);
-                return;
-            }
+                    $todos = $this->gateway->getTodosByUser($this->userId);
+                    if (count($todos) > 5) {
+                        http_response_code(423);
+                        echo json_encode(["message" => "Too many todos"]);
+                        return;
+                    }
 
-            $id = $this->gateway->createForUser($_POST, $this->userId);
+                    $id = $this->gateway->createForUser($_POST, $this->userId);
                     http_response_code(201);
                     echo json_encode(["message" => "Task is created", "id" => $id]);
                     break;
@@ -82,7 +82,7 @@ class TaskController
         $errors = [];
 
         $allTodosNames = array_column($todos, 'name');
-        if(in_array($data['name'],$allTodosNames)){
+        if (in_array($data['name'], $allTodosNames)) {
             $errors[] = "Todo's name is already exists";
         }
 
