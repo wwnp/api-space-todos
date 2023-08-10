@@ -2,10 +2,10 @@
 
 class TaskController
 {
-    private Task $gateway;
+    private TaskGateway $gateway;
     private int  $userId;
 
-    public function __construct(Task $gateway, int $userId)
+    public function __construct(TaskGateway $gateway, int $userId)
     {
         $this->gateway = $gateway;
         $this->userId = $userId;

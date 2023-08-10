@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+
+
 require dirname(__DIR__) . "/html/vendor/autoload.php";
 
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
@@ -40,7 +42,7 @@ if (!$auth->authenticateAPIKey()) {
 }
 $userId = $auth->getUserID();
 
-$task = new Task($database);
+$taskGateway = new TaskGateway($database);
 
-$controller = new TaskController($Task, $userId);
+$controller = new TaskController($taskGateway, $userId);
 $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
