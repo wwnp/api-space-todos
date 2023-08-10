@@ -1,7 +1,7 @@
 <?php
 
 
-class TaskGateway
+class Task
 {
     private PDO $conn;
 

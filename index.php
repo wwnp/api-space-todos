@@ -42,7 +42,7 @@ if (!$auth->authenticateAPIKey()) {
 }
 $userId = $auth->getUserID();
 
-$taskGateway = new TaskGateway($database);
+$task = new Task($database);
 
-$controller = new TaskController($taskGateway, $userId);
+$controller = new TaskController($task, $userId);
 $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);
