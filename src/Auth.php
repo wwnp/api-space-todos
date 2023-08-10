@@ -19,16 +19,15 @@ class Auth
             http_response_code(400);
             echo json_encode(["message" => "missing API key"]);
             return false;
-            
         }
 
         $user = $this->userGateway->getByAPIKey($api_key);
-	if($user === false){
-	    http_response_code(401);
-	    echo json_encode(["message" => "invalid API key"]);
-	    return false;	
-	}
-	
+        if ($user === false) {
+            http_response_code(401);
+            echo json_encode(["message" => "invalid API key"]);
+            return false;
+        }
+
         $this->userId = $user["id"];
 
         if ($this->userGateway->getByAPIKey($api_key) === false) {
