@@ -2,9 +2,14 @@
 
 declare(strict_types=1);
 
+use App\ErrorHandler;
+use App\Database;
+use App\UserGateway;
+use App\Auth;
+use App\Task;
+use App\TaskController;
 
-
-require dirname(__DIR__) . "/html/vendor/autoload.php";
+require "./vendor/autoload.php";
 
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
 header("Content-type: application/json; charset=UTF-8");
@@ -18,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-set_error_handler("ErrorHandler::handleError");
-set_exception_handler("ErrorHandler::handleException");
+set_error_handler([ErrorHandler::class, 'handleError']);
+set_exception_handler([ErrorHandler::class, 'handleException']);
 
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__ . "/api-in-php-udemy"));
 $dotenv->load();
