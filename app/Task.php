@@ -1,5 +1,8 @@
 <?php
 
+namespace App;
+
+use PDO;
 
 class Task
 {
