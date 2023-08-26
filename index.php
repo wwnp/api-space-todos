@@ -8,6 +8,10 @@ use App\UserGateway;
 use App\Auth;
 use App\Task;
 use App\TaskController;
+use App\Image;
+use App\ImageController;
+use GuzzleHttp\Client as GuzzleClient;
+use Aws\S3\S3Client;
 
 require "./vendor/autoload.php";
 
@@ -34,7 +38,7 @@ $parts = explode('/', $path);
 $resource = $parts[1];
 $id = $parts[2] ?? null;
 
-if ($resource != 'todos') {
+if ($resource != 'todos' && $resource != 'images') {
     http_response_code(404);
     exit;
 }
@@ -47,7 +51,23 @@ if (!$auth->authenticateAPIKey()) {
 }
 $userId = $auth->getUserID();
 
-$task = new Task($database);
 
-$controller = new TaskController($task, $userId);
+if ($resource === 'todos') {
+    $task = new Task($database);
+    $controller = new TaskController($task, $userId);
+}
+if ($resource === 'images') {
+    $s3 = new S3Client([
+        'version'     => 'latest',
+        'endpoint' => 'https://storage.yandexcloud.net',
+        'region'      => 'ru-central1', // e.g., 'us-east-1'
+        'credentials' => [
+            'key'    => $_ENV['YANDEX_CLOUD_ACCESS_TOKEN'],
+            'secret' => $_ENV['YANDEX_CLOUD_SECRET_KEY'],
+        ],
+    ]); // remade to singletone and facade
+    $image = new Image($database);
+    $controller = new ImageController($image, $userId,  $s3);
+}
+
 $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);

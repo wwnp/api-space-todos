@@ -2,3 +2,4 @@ vendor
 .env
 .htaccess
 ystemctl start mysql
+file_upload_debug.log

@@ -97,7 +97,6 @@ class TaskController
                 $errors[] = "Todo's priority must be an integer";
             }
         }
-
         return $errors;
     }
 }
