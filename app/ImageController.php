@@ -33,7 +33,7 @@ class ImageController
                     }
 
                     $bucketName = 'gallery-draen';
-                    $objectKey = 'images/' . $_POST['title']; // You can adjust the path and object key
+                    $objectKey = 'images/' . "{$this->userId}/" .  $_POST['title']; // You can adjust the path and object key
 
                     $result = $this->s3->putObject([
                         'Bucket' => $bucketName,

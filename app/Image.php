@@ -73,4 +73,5 @@ class Image
         $data = $stmt->fetch(PDO::FETCH_NUM);
         return $data[0];
     }
+
 }
