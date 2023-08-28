@@ -4,7 +4,7 @@ namespace App;
 
 use PDO;
 
-class UserGateway
+class User
 {
     private PDO $conn;
 

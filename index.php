@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 use App\ErrorHandler;
 use App\Database;
-use App\UserGateway;
+use App\User;
 use App\Auth;
-use App\Task;
-use App\TaskController;
+use App\Image;
+use App\ImageController;
+use Aws\S3\S3Client;
 
 require "./vendor/autoload.php";
 
@@ -34,20 +35,32 @@ $parts = explode('/', $path);
 $resource = $parts[1];
 $id = $parts[2] ?? null;
 
-if ($resource != 'todos') {
+if ($resource != 'todos' && $resource != 'images') {
     http_response_code(404);
     exit;
 }
 $database = new Database($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASS"]);
 
-$userGateway = new UserGateway($database);
-$auth = new Auth($userGateway);
+$user = new User($database);
+$auth = new Auth($user);
 if (!$auth->authenticateAPIKey()) {
     exit;
 }
 $userId = $auth->getUserID();
 
-$task = new Task($database);
 
-$controller = new TaskController($task, $userId);
+if ($resource === 'images') {
+    $s3 = new S3Client([
+        'version'     => 'latest',
+        'endpoint' => 'https://storage.yandexcloud.net',
+        'region'      => 'ru-central1', // e.g., 'us-east-1'
+        'credentials' => [
+            'key'    => $_ENV['YANDEX_CLOUD_ACCESS_TOKEN'],
+            'secret' => $_ENV['YANDEX_CLOUD_SECRET_KEY'],
+        ],
+    ]); // remade to singletone and facade
+    $image = new Image($database);
+    $controller = new ImageController($image, $userId,  $s3);
+}
+
 $controller->processRequest($_SERVER["REQUEST_METHOD"], $id);

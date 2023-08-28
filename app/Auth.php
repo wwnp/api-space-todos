@@ -5,11 +5,11 @@ namespace App;
 class Auth
 {
     private int $userId;
-    private UserGateway $userGateway;
+    private User $user;
 
-    public function __construct(UserGateway $userGateway)
+    public function __construct(User $user)
     {
-        $this->userGateway = $userGateway;
+        $this->user = $user;
     }
 
     public function authenticateAPIKey(): bool
@@ -22,7 +22,7 @@ class Auth
             return false;
         }
 
-        $user = $this->userGateway->getByAPIKey($api_key);
+        $user = $this->user->getByAPIKey($api_key);
         if ($user === false) {
             http_response_code(401);
             echo json_encode(["message" => "invalid API key"]);
@@ -31,7 +31,7 @@ class Auth
 
         $this->userId = $user["id"];
 
-        if ($this->userGateway->getByAPIKey($api_key) === false) {
+        if ($this->user->getByAPIKey($api_key) === false) {
             http_response_code(401);
             echo json_encode(["message" => "invalid API key"]);
             return false;
