@@ -25,10 +25,16 @@ class ImageController
                     break;
                 case 'POST':
                     $images = $this->model->getAllForUser($this->userId);
-                    $errors = $this->getValidationErrors(array_merge($_POST, $_FILES), true, $images);
+                    $errors = $this->getValidationErrors($_POST, true, $images, $_FILES);
+
                     if (!empty($errors)) {
                         http_response_code(422);
                         echo json_encode(["errors" => $errors]);
+                        return;
+                    }
+                    if (count($images) > 15) {
+                        http_response_code(429);
+                        echo json_encode(["message" => "Images's limit is reached"]);
                         return;
                     }
 
@@ -86,7 +92,7 @@ class ImageController
     }
 
 
-    private function getValidationErrors(array $data, bool $is_new = true, $images = []): array
+    private function getValidationErrors(array $data, bool $is_new = true, $images = [], $files = []): array
     {
         $errors = [];
 
@@ -97,6 +103,16 @@ class ImageController
 
         if ($is_new && empty($data["title"])) {
             $errors[] = "Image's title is required";
+        }
+
+        if ($files['image']['size'] > 1048576) {
+            $errors[] = "Image size must be less than 1MB.";
+        }
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png'];
+        $uploadedExtension = strtolower(pathinfo($files['image']['name'], PATHINFO_EXTENSION));
+        if (!in_array($uploadedExtension, $allowedExtensions)) {
+            $errors[] = "Only JPG or PNG images are allowed.";
         }
 
         return $errors;

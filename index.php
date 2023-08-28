@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 use App\ErrorHandler;
 use App\Database;
-use App\UserGateway;
+use App\User;
 use App\Auth;
-use App\Task;
-use App\TaskController;
 use App\Image;
 use App\ImageController;
-use GuzzleHttp\Client as GuzzleClient;
 use Aws\S3\S3Client;
 
 require "./vendor/autoload.php";
@@ -44,18 +41,14 @@ if ($resource != 'todos' && $resource != 'images') {
 }
 $database = new Database($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASS"]);
 
-$userGateway = new UserGateway($database);
-$auth = new Auth($userGateway);
+$user = new User($database);
+$auth = new Auth($user);
 if (!$auth->authenticateAPIKey()) {
     exit;
 }
 $userId = $auth->getUserID();
 
 
-if ($resource === 'todos') {
-    $task = new Task($database);
-    $controller = new TaskController($task, $userId);
-}
 if ($resource === 'images') {
     $s3 = new S3Client([
         'version'     => 'latest',
