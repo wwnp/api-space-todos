@@ -12,9 +12,11 @@ use Aws\S3\S3Client;
 
 require "./vendor/autoload.php";
 
+$allowedOrigins = ["*"];
+
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-API-KEY");
 header("Content-type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: " . implode(", ", $allowedOrigins)); // Set allowed origins
 header("Access-Control-Allow-Methods: *");
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Max-Age: 86400");
