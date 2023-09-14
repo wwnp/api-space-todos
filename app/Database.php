@@ -29,11 +29,4 @@ class Database
             PDO::ATTR_STRINGIFY_FETCHES => false
         ]);
     }
-
-    // public static function getInstanse(): self
-    // {
-    //     if (self::$instanse === null) {
-    //         self::$instanse = 
-    //     }
-    // }
 }

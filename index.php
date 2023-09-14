@@ -55,12 +55,12 @@ if ($resource === 'images') {
     $s3 = new S3Client([
         'version'     => 'latest',
         'endpoint' => 'https://storage.yandexcloud.net',
-        'region'      => 'ru-central1', // e.g., 'us-east-1'
+        'region'      => 'ru-central1',
         'credentials' => [
             'key'    => $_ENV['YANDEX_CLOUD_ACCESS_TOKEN'],
             'secret' => $_ENV['YANDEX_CLOUD_SECRET_KEY'],
         ],
-    ]); // remade to singletone and facade
+    ]);
     $image = new Image($database);
     $controller = new ImageController($image, $userId,  $s3);
 }

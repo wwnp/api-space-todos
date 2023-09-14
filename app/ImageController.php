@@ -39,15 +39,13 @@ class ImageController
                     }
 
                     $bucketName = 'gallery-draen';
-                    $objectKey = 'images/' . "{$this->userId}/" .  $_POST['title']; // You can adjust the path and object key
+                    $objectKey = 'images/' . "{$this->userId}/" .  $_POST['title'];
 
                     $result = $this->s3->putObject([
                         'Bucket' => $bucketName,
                         'Key'    => $objectKey,
                         'Body'   => fopen($_FILES['image']['tmp_name'], 'r'),
                     ]);
-
-                    // file_put_contents('file_upload_debug.log', $ext . "\n\n", FILE_APPEND);
 
                     if ($result) {
                         http_response_code(201);
